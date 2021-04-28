@@ -83,15 +83,6 @@ def evaluate(eval_model, data_source):
                 src_mask = model.generate_square_subsequent_mask(data.size(0)).to(device)
             output = eval_model(data, src_mask)
             print()
-
-            ''' 
-            for i in range(output[0].shape[0]):
-                output2 = output[0][i].detach().cpu().numpy()
-                output2 = output2/output2[output2.argmax()] 
-                simm =  np.inner( bench , output2 )
-                if simm < m:
-                    m = simm
-            '''
             output_flat = output.view(-1, n_tokens)
             total_loss += len(data) * criterion(output_flat, targets).item()
     return total_loss / (len(data_source) - 1)
@@ -101,7 +92,7 @@ def evaluate(eval_model, data_source):
 ####    TRAINING AND VALIDATION
 
 best_val_loss = float("inf")
-epochs = 50 # The number of epochs
+epochs = 3 # The number of epochs
 best_model = None
 
 for epoch in range(1, epochs + 1):
@@ -130,29 +121,24 @@ print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(
 print('=' * 89)
 
 
-'''
-data, targets = dh.get_batch(train_data, 1)
+# Train the model
 
-model = torch.load("transformer_model0.pth")
-model = model.to(device)
+# The output and the embeddings are 2 different things!
 
-print(vocab["blue"])
-print(vocab["Yellow"])
-print(vocab["car"])
+# Can you figure out how to get the embeddings?
 
-blue_t = torch.tensor(vocab["blue"])
-blue_y = torch.tensor(vocab["yellow"])
-blue_c = torch.tensor(vocab["car"])
+# take a look at the shape of the target 
+# take a look at the shape of the output
+# take a look at the shape of the embedding
 
-src = model.encoder.weight[blue_t] * math.sqrt(700)
-src2 = model.encoder.weight[blue_y] * math.sqrt(700)
-src3 = model.encoder.weight[blue_c] * math.sqrt(700)
 
-src = src.detach().cpu().numpy()
-src2 = src2.detach().cpu().numpy()
-src3 = src3.detach().cpu().numpy()
+# for "yellow"  and "blue" extract the tokens
+# put them into a tensor
+# get the embeddings of those 2 words
+# use np.inner to get the semantic simmilarity 
+# what about blue and car?
 
-print(np.inner(src,src))
-print(np.inner(src,src2))
-print(np.inner(src,src3))
-'''
+# can you come up with a different way of computing the semantic simmilarity?
+
+
+

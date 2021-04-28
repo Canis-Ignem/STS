@@ -17,11 +17,8 @@ def data_process(raw_text_iter, vocab ):
 
 
 def batchify(data, bsz):
-    # Divide the dataset into bsz parts.
     nbatch = data.size(0) // bsz
-    # Trim off any extra elements that wouldn't cleanly fit (remainders).
     data = data.narrow(0, 0, nbatch * bsz)
-    # Evenly divide the data across the bsz batches.
     data = data.view(bsz, -1).t().contiguous()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     return data.to(device)
@@ -64,5 +61,9 @@ def get_data():
 
 
 
+# Take a look at the tokens in vocab
 
+# take a look  at the shape of a batch
+
+# take a look at the batchified data
 
